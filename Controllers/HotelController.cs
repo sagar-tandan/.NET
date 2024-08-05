@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTOs.HotelDTOs;
 using api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,23 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            return Ok(hotels);
+
+            var hotelDTO = hotels.Select(hotel => new HotelDTO
+            {
+                Id = hotel.Id,
+                Name = hotel.Name,
+                Price = hotel.Price,
+                Description = hotel.Description,
+                Images = hotel.Images,
+                Rating = hotel.Rating,
+                FreeCancelation = hotel.FreeCancelation,
+                ReserveNow = hotel.ReserveNow
+            }).ToList();
+
+
+
+
+            return Ok(hotelDTO);
 
         }
 
@@ -38,30 +55,57 @@ namespace api.Controllers
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var retrivedHotel = await _context.Hotel.FindAsync(id);
+
+            //Since id is Primary key and PK is unique 
             if (retrivedHotel == null)
             {
                 return NotFound();
             }
-            return Ok(retrivedHotel);
+
+            var retrivedHotelDTO = new HotelDTO
+            {
+                Id = retrivedHotel.Id,
+                Name = retrivedHotel.Name,
+                Price = retrivedHotel.Price,
+                Description = retrivedHotel.Description,
+                Images = retrivedHotel.Images,
+                Rating = retrivedHotel.Rating,
+                FreeCancelation = retrivedHotel.FreeCancelation,
+                ReserveNow = retrivedHotel.ReserveNow
+            };
+            return Ok(retrivedHotelDTO);
         }
 
         [HttpPost]
 
-        public async Task<IActionResult> CreateHotel([FromBody] Hotel hotel)
+        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelDTO hotelDTO)
         {
-            if (hotel == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
+
+            var hotel = new Hotel
+            {
+                Name = hotelDTO.Name,
+                Price = hotelDTO.Price,
+                Description = hotelDTO.Description,
+                Images = hotelDTO.Images,
+                Rating = hotelDTO.Rating,
+                FreeCancelation = hotelDTO.FreeCancelation,
+                ReserveNow = hotelDTO.ReserveNow
+
+            };
+
             await _context.Hotel.AddAsync(hotel);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = hotel.Id }, hotel);
+            return CreatedAtAction(nameof(GetById), new { id = hotel.Id }, hotelDTO);
 
         }
 
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> UpdateHotel(int id, [FromBody] Hotel hotel)
+        public async Task<IActionResult> UpdateHotel(int id, [FromBody] UpdateDTO hotelDTO)
         {
             var hotelToBeUpdated = await _context.Hotel.FindAsync(id);
 
@@ -70,19 +114,19 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            hotelToBeUpdated.Name = hotel.Name;
-            hotelToBeUpdated.Price = hotel.Price;
-            hotelToBeUpdated.Description = hotel.Description;
-            hotelToBeUpdated.Images = hotel.Images;
-            hotelToBeUpdated.Rating = hotel.Rating;
-            hotelToBeUpdated.FreeCancelation = hotel.FreeCancelation;
-            hotelToBeUpdated.ReserveNow = hotel.ReserveNow;
+            hotelToBeUpdated.Name = hotelDTO.Name;
+            hotelToBeUpdated.Price = hotelDTO.Price;
+            hotelToBeUpdated.Description = hotelDTO.Description;
+            hotelToBeUpdated.Images = hotelDTO.Images;
+            hotelToBeUpdated.Rating = hotelDTO.Rating;
+            hotelToBeUpdated.FreeCancelation = hotelDTO.FreeCancelation;
+            hotelToBeUpdated.ReserveNow = hotelDTO.ReserveNow;
 
             // await _context.Hotel.Update(hotelToBeUpdated);
             _context.Entry(hotelToBeUpdated).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Ok(hotel);
+            return Ok(hotelToBeUpdated);
 
         }
 

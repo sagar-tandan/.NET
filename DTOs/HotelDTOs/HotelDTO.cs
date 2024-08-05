@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Model
+namespace api.DTOs.HotelDTOs
 {
-    public class Hotel
+    public class HotelDTO
     {
-
-        [Key]
         public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
 
         public decimal Price { get; set; }
@@ -24,10 +22,5 @@ namespace api.Model
         public bool FreeCancelation { get; set; }
 
         public bool ReserveNow { get; set; }
-
-        //One to many Relation
-        public List<HotelReview> HotelReviews { get; set; } = new List<HotelReview>();
-
-
     }
 }
