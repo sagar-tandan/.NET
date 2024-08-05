@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -21,9 +22,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var hotels = _context.Hotel.ToList();
+            var hotels = await _context.Hotel.ToListAsync();
             if (hotels == null)
             {
                 return NotFound();
@@ -34,9 +35,9 @@ namespace api.Controllers
 
         [HttpGet("{id}")]
 
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var retrivedHotel = _context.Hotel.Find(id);
+            var retrivedHotel = await _context.Hotel.FindAsync(id);
             if (retrivedHotel == null)
             {
                 return NotFound();
@@ -54,14 +55,15 @@ namespace api.Controllers
             }
             await _context.Hotel.AddAsync(hotel);
             await _context.SaveChangesAsync();
-            return Ok(hotel);
+            return CreatedAtAction(nameof(GetById), new { id = hotel.Id }, hotel);
+
         }
 
         [HttpPut("{id}")]
 
-        public IActionResult UpdateHotel(int id, [FromBody] Hotel hotel)
+        public async Task<IActionResult> UpdateHotel(int id, [FromBody] Hotel hotel)
         {
-            var hotelToBeUpdated = _context.Hotel.Find(id);
+            var hotelToBeUpdated = await _context.Hotel.FindAsync(id);
 
             if (hotelToBeUpdated == null)
             {
@@ -76,8 +78,9 @@ namespace api.Controllers
             hotelToBeUpdated.FreeCancelation = hotel.FreeCancelation;
             hotelToBeUpdated.ReserveNow = hotel.ReserveNow;
 
-            _context.Hotel.Update(hotelToBeUpdated);
-            _context.SaveChanges();
+            // await _context.Hotel.Update(hotelToBeUpdated);
+            _context.Entry(hotelToBeUpdated).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             return Ok(hotel);
 
@@ -85,15 +88,15 @@ namespace api.Controllers
 
         [HttpDelete("{id}")]
 
-        public IActionResult DeleteHotel([FromRoute] int id)
+        public async Task<IActionResult> DeleteHotel([FromRoute] int id)
         {
-            var hotelToBeDeleted = _context.Hotel.Find(id);
+            var hotelToBeDeleted = await _context.Hotel.FindAsync(id);
             if (hotelToBeDeleted == null)
             {
                 return BadRequest();
             }
             _context.Hotel.Remove(hotelToBeDeleted);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "The hotel is deleted Successfully!" });
         }
