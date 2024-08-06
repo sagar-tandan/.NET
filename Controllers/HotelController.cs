@@ -44,8 +44,6 @@ namespace api.Controllers
             }).ToList();
 
 
-
-
             return Ok(hotelDTO);
 
         }
@@ -56,7 +54,6 @@ namespace api.Controllers
         {
             var retrivedHotel = await _context.Hotel.FindAsync(id);
 
-            //Since id is Primary key and PK is unique 
             if (retrivedHotel == null)
             {
                 return NotFound();
@@ -146,4 +143,5 @@ namespace api.Controllers
         }
 
     }
+}
 }
