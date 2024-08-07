@@ -63,5 +63,21 @@ namespace api.Controllers.UserControllers
             return Ok(UsersToShow);
 
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        {
+            var UserToDelete = await _context.Users.FindAsync(id);
+            if (UserToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _context.Users.Remove(UserToDelete);
+            await _context.SaveChangesAsync();
+
+            return Ok("User Deleted Successfully!!");
+
+        }
     }
 }
