@@ -36,7 +36,9 @@ namespace api.Controllers.UserControllers
             {
                 Id = user.Id,
                 Username = user.Username,
-                Email = user.Email
+                Email = user.Email,
+                Password = user.Password
+
             });
 
             return Ok(UsersToShow);
@@ -58,7 +60,7 @@ namespace api.Controllers.UserControllers
                     {
                         Username = createUserDTO.Username,
                         Email = createUserDTO.Email,
-                        Password = createUserDTO.Password
+                        Password = BCrypt.Net.BCrypt.HashPassword(createUserDTO.Password)
                     };
 
                     await _context.Users.AddAsync(newUser);
@@ -88,7 +90,7 @@ namespace api.Controllers.UserControllers
             }
             registeredUser.Username = updateUserDTO.Username;
             registeredUser.Email = updateUserDTO.Email;
-            registeredUser.Password = updateUserDTO.Password;
+            registeredUser.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDTO.Password);
 
             _context.Entry(registeredUser).State = EntityState.Modified;
             try

@@ -29,12 +29,14 @@ namespace api.Controllers.UserControllers
             {
                 return NotFound();
             }
-            if (user.Password != loginDTO.Password)
+            if (BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.Password))
             {
-                return BadRequest("Credentials didn't matched!!");
+                return Ok("Logged In!!");
             }
+            return BadRequest("Credentials didn't matched!!");
 
-            return Ok("Logged In!!");
+
+
         }
     }
 }

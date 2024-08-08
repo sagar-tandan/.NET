@@ -13,7 +13,7 @@ namespace api.DTOs.UserDTOs.SignUpDTO
 
         public string? Email { get; set; }
 
-        // public string? Password { get; set; }
+        public string? Password { get; set; }
 
     }
 }

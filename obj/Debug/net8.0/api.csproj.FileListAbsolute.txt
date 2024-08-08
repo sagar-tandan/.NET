@@ -104,3 +104,4 @@ C:\Users\CSE\Desktop\.NET\api\obj\Debug\net8.0\api.pdb
 C:\Users\CSE\Desktop\.NET\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\CSE\Desktop\.NET\api\obj\Debug\net8.0\ref\api.dll
 C:\Users\CSE\Desktop\.NET\api\obj\Debug\net8.0\api.sourcelink.json
+C:\Users\CSE\Desktop\.NET\api\bin\Debug\net8.0\BCrypt.Net-Core.dll
