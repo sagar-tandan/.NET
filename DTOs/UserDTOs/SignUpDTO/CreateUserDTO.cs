@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.DTOs.UserDTOs
+namespace api.DTOs.UserDTOs.SignUpDTO
 {
-    public class SignUpDTO
+    public class CreateUserDTO
     {
+
         public string? Username { get; set; }
 
         public string? Email { get; set; }
@@ -14,5 +15,6 @@ namespace api.DTOs.UserDTOs
         public string? Password { get; set; }
 
         public string? ConfirmPassword { get; set; }
+
     }
 }
