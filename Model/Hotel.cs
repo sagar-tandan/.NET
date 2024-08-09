@@ -11,7 +11,7 @@ namespace api.Model
 
         [Key]
         public int Id { get; set; }
-        public string? Name { get; set; } 
+        public string? Name { get; set; }
 
         public decimal Price { get; set; }
 
@@ -28,6 +28,7 @@ namespace api.Model
         //One to many Relation
         public List<HotelReview> HotelReviews { get; set; } = new List<HotelReview>();
 
+        public List<HotelBooking> HotelBooking { get; set; } = new List<HotelBooking>();
 
     }
 }

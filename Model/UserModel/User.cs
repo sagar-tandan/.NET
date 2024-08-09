@@ -18,5 +18,9 @@ namespace api.Model.UserModel
         public string? Password { get; set; }
 
         // public string? ConfirmPassword { get; set; }
+
+
+        public List<HotelBooking> HotelBooking { get; set; } = new List<HotelBooking>();
+
     }
 }

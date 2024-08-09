@@ -17,5 +17,25 @@ namespace api.Data
         public DbSet<Hotel> Hotel { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<HotelBooking> HotelBookings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //Configuring many to many relation
+            modelBuilder.Entity<HotelBooking>()
+            .HasOne(hb => hb.Hotel)
+            .WithMany(h => h.HotelBooking)
+            .HasForeignKey(hb => hb.HotelId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HotelBooking>()
+            .HasOne(hb => hb.User)
+            .WithMany(h => h.HotelBooking)
+            .HasForeignKey(hb => hb.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
