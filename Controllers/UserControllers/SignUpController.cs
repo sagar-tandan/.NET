@@ -1,129 +1,129 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Data;
-using api.DTOs.UserDTOs;
-using api.DTOs.UserDTOs.SignUpDTO;
-using api.Model.UserModel;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Threading.Tasks;
+// using api.Data;
+// using api.DTOs.UserDTOs;
+// using api.DTOs.UserDTOs.SignUpDTO;
+// using api.Model.UserModel;
+// using Microsoft.AspNetCore.Mvc;
+// using Microsoft.EntityFrameworkCore;
 
-namespace api.Controllers.UserControllers
-{
+// namespace api.Controllers.UserControllers
+// {
 
-    [Route("api/Users")]
-    [ApiController]
-    public class SignUpController : ControllerBase
-    {
-        private readonly ApplicationDBContext _context;
-        public SignUpController(ApplicationDBContext context)
-        {
-            _context = context;
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var allUsers = await _context.Users.ToListAsync();
-            if (allUsers == null)
-            {
-                return NotFound();
-            }
-
-            var UsersToShow = allUsers.Select(user => new ViewUserDTO
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                Password = user.Password
-
-            });
-
-            return Ok(UsersToShow);
-
-        }
+//     [Route("api/Users")]
+//     [ApiController]
+//     public class SignUpController : ControllerBase
+//     {
+//         private readonly ApplicationDBContext _context;
+//         public SignUpController(ApplicationDBContext context)
+//         {
+//             _context = context;
+//         }
 
 
-        [HttpPost]
+//         [HttpGet]
+//         public async Task<IActionResult> GetUsers()
+//         {
+//             var allUsers = await _context.Users.ToListAsync();
+//             if (allUsers == null)
+//             {
+//                 return NotFound();
+//             }
 
-        public async Task<IActionResult> Createuser([FromBody] CreateUserDTO createUserDTO)
-        {
+//             var UsersToShow = allUsers.Select(user => new ViewUserDTO
+//             {
+//                 Id = user.Id,
+//                 Username = user.Username,
+//                 Email = user.Email,
+//                 Password = user.Password
 
-            var serachUser = await _context.Users.SingleOrDefaultAsync(u => u.Username == createUserDTO.Username);
-            if (serachUser == null)
-            {
-                if (createUserDTO.Password == createUserDTO.ConfirmPassword)
-                {
-                    var newUser = new User
-                    {
-                        Username = createUserDTO.Username,
-                        Email = createUserDTO.Email,
-                        Password = BCrypt.Net.BCrypt.HashPassword(createUserDTO.Password)
-                    };
+//             });
 
-                    await _context.Users.AddAsync(newUser);
-                    await _context.SaveChangesAsync();
-                    return StatusCode(200, "User Created Successfully!!");
+//             return Ok(UsersToShow);
 
-                }
-                else
-                {
-                    return BadRequest("Password didn't match!!");
-
-                }
-
-            }
-            return BadRequest("Username already Exists!!");
+//         }
 
 
-        }
+//         [HttpPost]
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updateUserDTO)
-        {
-            var registeredUser = await _context.Users.FindAsync(id);
-            if (registeredUser == null)
-            {
-                return BadRequest();
-            }
-            registeredUser.Username = updateUserDTO.Username;
-            registeredUser.Email = updateUserDTO.Email;
-            registeredUser.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDTO.Password);
+//         public async Task<IActionResult> Createuser([FromBody] CreateUserDTO createUserDTO)
+//         {
 
-            _context.Entry(registeredUser).State = EntityState.Modified;
-            try
-            {
+//             var serachUser = await _context.Users.SingleOrDefaultAsync(u => u.Username == createUserDTO.Username);
+//             if (serachUser == null)
+//             {
+//                 if (createUserDTO.Password == createUserDTO.ConfirmPassword)
+//                 {
+//                     var newUser = new User
+//                     {
+//                         Username = createUserDTO.Username,
+//                         Email = createUserDTO.Email,
+//                         Password = BCrypt.Net.BCrypt.HashPassword(createUserDTO.Password)
+//                     };
 
-                await _context.SaveChangesAsync();
+//                     await _context.Users.AddAsync(newUser);
+//                     await _context.SaveChangesAsync();
+//                     return StatusCode(200, "User Created Successfully!!");
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+//                 }
+//                 else
+//                 {
+//                     return BadRequest("Password didn't match!!");
 
-            return StatusCode(200, "User Updated Successfully!!");
+//                 }
 
-        }
+//             }
+//             return BadRequest("Username already Exists!!");
+
+
+//         }
+
+//         [HttpPut("{id}")]
+//         public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updateUserDTO)
+//         {
+//             var registeredUser = await _context.Users.FindAsync(id);
+//             if (registeredUser == null)
+//             {
+//                 return BadRequest();
+//             }
+//             registeredUser.Username = updateUserDTO.Username;
+//             registeredUser.Email = updateUserDTO.Email;
+//             registeredUser.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDTO.Password);
+
+//             _context.Entry(registeredUser).State = EntityState.Modified;
+//             try
+//             {
+
+//                 await _context.SaveChangesAsync();
+
+//             }
+//             catch (Exception ex)
+//             {
+//                 return StatusCode(500, ex);
+//             }
+
+//             return StatusCode(200, "User Updated Successfully!!");
+
+//         }
 
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
-        {
-            var UserToDelete = await _context.Users.FindAsync(id);
-            if (UserToDelete == null)
-            {
-                return NotFound();
-            }
+//         [HttpDelete("{id}")]
+//         public async Task<IActionResult> DeleteUser([FromRoute] int id)
+//         {
+//             var UserToDelete = await _context.Users.FindAsync(id);
+//             if (UserToDelete == null)
+//             {
+//                 return NotFound();
+//             }
 
-            _context.Users.Remove(UserToDelete);
-            await _context.SaveChangesAsync();
+//             _context.Users.Remove(UserToDelete);
+//             await _context.SaveChangesAsync();
 
-            return Ok("User Deleted Successfully!!");
+//             return Ok("User Deleted Successfully!!");
 
-        }
-    }
-}
+//         }
+//     }
+// }

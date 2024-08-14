@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Threading.Tasks;
 
-namespace api.Controllers.UserControllers
-{
-    public class LoginDTO
-    {
-        public string? Username { get; set; }
-        public string? Password { get; set; }
-    }
-}
+// namespace api.Controllers.UserControllers
+// {
+//     public class LoginDTO
+//     {
+//         public string? Username { get; set; }
+//         public string? Password { get; set; }
+//     }
+// }

@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using api.Data;
 using api.DTOs.HotelDTOs;
 using api.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
+    [Authorize]
     [Route("api/hotel")]
     [ApiController]
     public class HotelController : ControllerBase
@@ -21,6 +23,7 @@ namespace api.Controllers
             _context = context;
 
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

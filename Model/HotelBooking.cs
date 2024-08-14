@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Model.UserModel;
 
 namespace api.Model
 {
@@ -10,8 +9,8 @@ namespace api.Model
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-        public User? User { get; set; }
+        // public int UserId { get; set; }
+        // public User? User { get; set; }
 
         public int HotelId { get; set; }
         public Hotel? Hotel { get; set; }
