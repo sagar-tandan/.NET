@@ -36,6 +36,7 @@ namespace api.Service
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
             };
 
+
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -44,7 +45,7 @@ namespace api.Service
                 //takes a list of claims (like user email and username) and uses them to create a new identity object. 
                 //This identity object is like a digital ID card that contains all the important details about the user and is assigned to the subject.
                 Subject = new ClaimsIdentity(Claims),
-                Expires = DateTime.Now.AddDays(7),
+                Expires = DateTime.Now.AddMinutes(1),
                 SigningCredentials = creds,
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"],

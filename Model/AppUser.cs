@@ -8,6 +8,7 @@ namespace api.Model
 {
     public class AppUser : IdentityUser
     {
+        public List<HotelBooking> HotelBooking { get; set; } = new List<HotelBooking>();
 
     }
 }

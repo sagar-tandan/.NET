@@ -16,27 +16,26 @@ namespace api.Data
 
         }
         public DbSet<Hotel> Hotel { get; set; }
+        public DbSet<HotelReview> HotelReviews { get; set; }
 
-        // public DbSet<User> Users { get; set; }
-
-        // public DbSet<HotelBooking> HotelBookings { get; set; }
+        public DbSet<HotelBooking> HotelBookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             //Configuring many to many relation
-            // modelBuilder.Entity<HotelBooking>()
-            // .HasOne(hb => hb.Hotel)
-            // .WithMany(h => h.HotelBooking)
-            // .HasForeignKey(hb => hb.HotelId)
-            // .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<HotelBooking>()
+            .HasOne(hb => hb.Hotel)
+            .WithMany(h => h.HotelBooking)
+            .HasForeignKey(hb => hb.HotelId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            // modelBuilder.Entity<HotelBooking>()
-            // .HasOne(hb => hb.User)
-            // .WithMany(h => h.HotelBooking)
-            // .HasForeignKey(hb => hb.UserId)
-            // .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<HotelBooking>()
+            .HasOne(hb => hb.User)
+            .WithMany(h => h.HotelBooking)
+            .HasForeignKey(hb => hb.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -54,7 +53,7 @@ namespace api.Data
                     NormalizedName = "USER"
                 },
             };
-            builder.Entity<IdentityRole>().HasData(roles); 
+            builder.Entity<IdentityRole>().HasData(roles);
             //When the database is created or updated, these roles will be inserted into the IdentityRole table
             //Here are some default roles we need in the system—please add them to the database.
         }

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using api.DTOs.AuthDTO;
 using api.Interface;
 using api.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using tourismApp.Extensions;
 
 namespace api.Controllers
 {
@@ -19,11 +21,13 @@ namespace api.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signinManager;
+
         public AuthController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signinManager = signInManager;
+
 
         }
         [HttpPost("login")]
@@ -97,6 +101,25 @@ namespace api.Controllers
 
                 return StatusCode(500, e);
             }
+        }
+
+        [Authorize]
+        [HttpGet("verify-token")]
+        public async Task<IActionResult> VerifyToken()
+        {
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+
+
+            // Retrieve user from database using the userId if needed
+            // var user = _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            // If the request reaches this point, the token is valid
+            return Ok(roles);
         }
 
     }
